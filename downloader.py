@@ -141,19 +141,21 @@ def main(argv):
             parser.print_usage()
             raise ValueError('you need to specify a Youtube ID and an output filename')
 
-        print 'Downloading Youtube comments for video:', youtube_id
+        print('Downloading Youtube comments for video:', youtube_id)
         count = 0
-        with open(output, 'wb') as fp:
+        with open(output, 'w') as fp:
             for comment in download_comments(youtube_id):
-                print >> fp, json.dumps(comment)
+                print(json.dumps(comment), file=fp)
                 count += 1
                 sys.stdout.write('Downloaded %d comment(s)\r' % count)
                 sys.stdout.flush()
-        print '\nDone!'
+        print('\nDone!')
 
 
-    except Exception, e:
-        print 'Error:', str(e)
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
         sys.exit(1)
 
 
